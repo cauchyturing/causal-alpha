@@ -26,7 +26,14 @@ A **skill** (not a library) that teaches AI agents to:
 Built on two axioms from mathematics (not opinions):
 
 > **Axiom 1:** Causal search space (K≈10) is honest. Blind scan (K≈10,000) is not. Same Sharpe 1.8 → 97% real (causal) vs 41% real (blind). *— Pearl + Deflated Sharpe Ratio*
->
+
+```
+Pearl's definition:  causation = invariant under intervention
+Market reality:      regime change = intervention
+Consequence:         only causal signals survive live trading
+Bonus:               causal K is small → DSR is honest → discoveries are real
+```
+
 > **Axiom 2:** Future data in features = invalid backtest. Zero tolerance. *— Definitional*
 
 And three constraints from 200+ experiments across 6 assets (strong, but questionable with evidence):
@@ -76,7 +83,7 @@ User says "research SOL" → agent handles everything:
   Abel key (1 click) → parents → prices → harness → experiments → results
 ```
 
-### For humans (if you must)
+### For direct use
 
 ```bash
 # 1. Install validation framework
@@ -94,32 +101,15 @@ pip install git+https://github.com/cauchyturing/causal-edge.git
 
 Built from this methodology. Real paper trading, real data, real validation:
 
-| Asset | Sharpe | Experiments | Method |
-|-------|--------|-------------|--------|
-| ETH | 4.27 | 1,403 days | 1 Abel parent (SSTK), dual-lag xcorr |
-| BNB | 2.82 | 158 experiments | 18 parents (multihop + 8 crypto peers) |
-| META | 2.57 | 55 experiments | 25 Abel parents, multi-horizon GBDT |
-| AAPL | 1.69 | 40 experiments | Abel multihop + sector peers |
-| TON | 1.77 | 2,043 days | 8-component vote ensemble |
+| Asset | Sharpe | Backtest | Research | Method |
+|-------|--------|----------|----------|--------|
+| ETH | 4.27 | 1,403 days | — | 1 Abel parent (SSTK), dual-lag xcorr |
+| BNB | 2.82 | 1,537 days | 158 experiments | 18 parents (multihop + 8 crypto peers) |
+| META | 2.57 | 1,060 days | 55 experiments | 25 Abel parents, multi-horizon GBDT |
+| AAPL | 1.69 | 1,223 days | 40 experiments | Abel multihop + sector peers |
+| TON | 1.77 | 2,043 days | — | 8-component vote ensemble |
 
-Every strategy passed the full [15-test validation framework](https://github.com/cauchyturing/causal-edge). Zero look-ahead. Honest K. No gaming.
-
-## The Key Insight
-
-Most quant research is correlation mining with K=10,000. The Deflated Sharpe Ratio says: at K=10,000, you need Sharpe > 3.0 for 95% confidence. Most "discoveries" are noise.
-
-Causal discovery via Abel gives K≈10. At K=10, Sharpe > 1.3 is 95% real.
-
-**Same signal. Wildly different honesty.** The difference isn't technique — it's search space. Causation constrains K to mechanistically justified relationships. Everything else is noise with a good backtest.
-
-```
-Pearl's definition:  causation = invariant under intervention
-Market reality:      regime change = intervention
-Consequence:         only causal signals survive live trading
-Bonus:               causal K is small → DSR is honest → discoveries are real
-```
-
-This isn't an opinion. It's a derivation. Read [`references/methodology.md`](references/methodology.md) for the full proof.
+**"Sharpe 4.27 — isn't that too good?"** Every number passed DSR (deflated for K), CPCV (PBO < 10%), rolling Sharpe stability, source substitution, and 11 other tests. The [validation framework is open source](https://github.com/cauchyturing/causal-edge) — run it yourself. If you can break these numbers, open an issue.
 
 ## Skill Architecture
 
