@@ -50,7 +50,9 @@ Create: strategy.py, evaluate.py, results.tsv, memory.md
 
 ### Step 5: First Experiment
 
-Agent writes `strategy.py` from scratch using discovered parents. Runs `evaluate.py` -> first metrics. Records baseline in `results.tsv`. Reports to user:
+Before writing code: read `references/proven-patterns.md` for mechanism inspiration. Understand what has worked on other assets and WHY — then make your own judgment about what applies here. Don't copy. Don't scaffold. Understand the mechanism, then write your own.
+
+Agent writes `strategy.py` from scratch using discovered parents. Runs `evaluate.py` → first metrics. Records baseline in `results.tsv`. Reports to user:
 
 > "Found N parents (K=M including multihop). First backtest: Sharpe X.XX. Starting loop."
 
@@ -113,7 +115,8 @@ BNB proof: 16 "explore" experiments that only removed features -> 0 keeps. Real 
 - **Regime check**: every KEEP must pass bull / bear / recent sub-period Sharpes. An improvement that only works in one regime = DISCARD.
 - **Combination**: every 3 KEEPs, try combining top-2 improvements as a single experiment.
 - **Structured idea generation** (when stuck): re-read memory.md, analyze near-misses in results.tsv, query Abel for new parents, check cross-strategy transfer from other assets.
-- **NEVER STOP**: run until interrupted. ~50 experiments/hour, ~600 overnight. The human reviews `results.tsv` and `memory.md` when they return.
+- **NEVER STOP** unless exhausted: run until interrupted (~50/hour, ~600 overnight).
+- **Honest failure**: if 20+ consecutive discards AND genuine explore tried in 3+ dimensions → report "no signal found, search space exhausted" and STOP. Burning compute on a dead asset is not research — it's waste. An honest "no signal" is a valid and valuable outcome.
 
 ## results.tsv Format
 

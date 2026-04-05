@@ -148,6 +148,13 @@ Each KEEP updates the baseline. The next experiment compounds on it.
 
 Full KEEP report must include: triangle metrics + returns (Sharpe/Calmar/PF) + risk (MaxDD/VaR/CVaR/Hill) + distribution (skew/kurt) + robustness (DSR/PBO/OOS) + yearly breakdown.
 
+## After Research
+
+Research produces one of two outcomes:
+
+- **Signal found** (N KEEPs, Sharpe > 1.0, validation PASS): Deploy via causal-edge — add strategy to `strategies.yaml`, generate dashboard. The research loop fed the production pipeline.
+- **No signal** (20+ consecutive discards, 3+ explore dimensions tried): Report honestly. "No causal alpha found for X after N experiments." This is a valid, valuable outcome — it prevents the student from trading noise.
+
 ## Machine-Readable Rules
 
 ```
