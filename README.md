@@ -14,15 +14,19 @@ Agent:  "Found Sharpe 1.8 from causal parents. 3 KEEPs from 50 experiments.
 **5 minutes to first signal. 1 hour to honest results. Zero quant knowledge required.**
 
 ```mermaid
-graph LR
-    D[Discover] -- "Axiom 1: K honest" --> B[Build]
-    B -- "Axiom 2: no look-ahead" --> V[Validate]
-    V -- KEEP --> L[Learn]
-    V -. DISCARD .-> B
-    L --> D
-```
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1a1a2e', 'primaryTextColor': '#eee', 'lineColor': '#0f3460', 'secondaryColor': '#16213e'}}}%%
+flowchart TD
+    D(["<b>DISCOVER</b><br/>Abel CAP → causal parents"])
+    B(["<b>BUILD</b><br/>strategy.py from scratch"])
+    V{"<b>VALIDATE</b><br/>metric triangle"}
+    L(["<b>LEARN</b><br/>compound on baseline"])
 
-> **Discover** causal parents via Abel CAP → **Build** strategy.py from scratch → **Validate** with metric triangle → **Learn** and compound on baseline → repeat
+    D -->|"K honest · Pearl"| B
+    B -->|"no look-ahead"| V
+    V -->|"KEEP"| L
+    V -.->|"DISCARD"| B
+    L -->|"next cycle"| D
+```
 
 The agent is the quant. You are the client. causal-alpha is the methodology that makes it honest.
 
