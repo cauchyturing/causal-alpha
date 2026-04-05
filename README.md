@@ -3,31 +3,28 @@
 **Your agent discovers what drives any asset. Then it researches 600 experiments overnight. You wake up to honest results.**
 
 ```
-Student:  "research alpha for SOL"
-Agent:    [gets Abel key: 1 click] → [discovers 12 causal parents]
-          → [fetches 5 years of prices] → [writes first strategy]
-          → [runs 50 experiments with anti-gaming validation]
-Agent:    "Found Sharpe 1.8 from causal parents. 3 KEEPs from 50 experiments.
-           Or: No signal found after 50 experiments. Honest."
+You:    "research alpha for SOL"
+Agent:  [gets Abel key: 1 click] → [discovers 12 causal parents]
+        → [fetches 5 years of prices] → [writes first strategy]
+        → [runs 50 experiments with anti-gaming validation]
+Agent:  "Found Sharpe 1.8 from causal parents. 3 KEEPs from 50 experiments.
+         Or: No signal found after 50 experiments. Honest."
 ```
 
 **5 minutes to first signal. 1 hour to honest results. Zero quant knowledge required.**
 
 ```mermaid
 graph LR
-    D["🔍 Discover<br/>Abel CAP → causal parents"]
-    B["🔨 Build<br/>strategy.py from scratch"]
-    V["⚖️ Validate<br/>causal-edge metric triangle"]
-    L["🧠 Learn<br/>compound on baseline"]
-
-    D -- "Axiom 1: K honest" --> B
-    B -- "Axiom 2: no look-ahead" --> V
-    V -- "KEEP ✓" --> L
-    V -. "DISCARD ✗" .-> B
+    D[Discover] -- "Axiom 1: K honest" --> B[Build]
+    B -- "Axiom 2: no look-ahead" --> V[Validate]
+    V -- KEEP --> L[Learn]
+    V -. DISCARD .-> B
     L --> D
 ```
 
-The agent is the quant. The student is the client. causal-alpha is the methodology that makes it honest.
+> **Discover** causal parents via Abel CAP → **Build** strategy.py from scratch → **Validate** with metric triangle → **Learn** and compound on baseline → repeat
+
+The agent is the quant. You are the client. causal-alpha is the methodology that makes it honest.
 
 ## What This Is
 
@@ -60,17 +57,15 @@ Axioms are permanent. Constraints are our current best. The agent knows the diff
 
 ## The 100× Equalizer
 
-A college student with zero quant knowledge gets:
+| What | Without | With causal-alpha |
+|------|---------|-------------------|
+| Discovery | Scan 10,000 pairs (K=10,000, noise) | Abel CAP → 12 causal parents (K=10) |
+| Strategy | Overfit a backtest (look-ahead) | Agent writes from scratch, zero look-ahead |
+| Validation | "Sharpe is 3!" (gamed) | Metric triangle catches every trick |
+| Research | Manual, 1/day | 600/night, autonomous, compounds |
+| Failure mode | Trade noise, lose money | "No signal found" → capital preserved |
 
-| What | Without causal-alpha | With causal-alpha |
-|------|---------------------|-------------------|
-| Discovery | Google "what predicts SOL?" (noise) | Abel CAP → 12 causal parents (K=10) |
-| Strategy | Copy Reddit backtest (look-ahead) | Agent writes from scratch, zero look-ahead |
-| Validation | "Sharpe is 3!" (gamed) | Metric triangle catches every gaming trick |
-| Research | Manual, 1/day, gives up | 600/night, autonomous, compounds |
-| Honest failure | Trades noise, loses money | "No signal found" → money saved |
-
-**The student is protected from gaming, look-ahead, and false hope — without knowing what those words mean.**
+**Institutional-grade methodology. One command to run it.**
 
 ## How It Works
 
