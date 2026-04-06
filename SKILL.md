@@ -214,8 +214,28 @@ Full KEEP report must include: causal-edge validation score + triangle metrics +
 
 Research produces one of two outcomes:
 
-- **Signal found** (N KEEPs, validation PASS at 15/15): Deploy via causal-edge — add strategy to `strategies.yaml`, create engine wrapper. The research loop fed the production pipeline.
+- **Signal found** (N KEEPs, validation PASS at 15/15): Deploy via the 4-step checklist below.
 - **No signal** (20+ consecutive discards, 3+ explore dimensions tried): Report honestly. "No causal alpha found for X after N experiments." This is a valid, valuable outcome — it prevents the student from trading noise.
+
+### Deployment Checklist [ALL 4 REQUIRED]
+
+Strategy passing validation is NOT deployment. The trade log and dashboard
+are what the user sees. If they still show old data, you deployed nothing.
+
+```
+1. causal-edge validate --csv backtest.csv     → must PASS
+2. Backfill trade log                          → confirm rows, dates, cum_pnl
+3. causal-edge validate --strategy <id>        → must PASS (from trade log, not CSV)
+4. causal-edge dashboard                       → confirm strategy appears with new data
+```
+
+Only after step 4 passes is the deployment complete. Steps 1-2 are strategy
+validation. Steps 3-4 are system validation. Both are required.
+
+Anti-pattern (happened 2026-04-05): strategy.py passed 13/13, agent declared
+done. Trade log still had old data (2020-08, IC=0.051). Dashboard showed old
+curves. User had to ask "trade log 呢?" to discover the gap. Unit validation
+passed, system validation was never run.
 
 ## Machine-Readable Rules
 
