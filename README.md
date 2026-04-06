@@ -1,180 +1,93 @@
 # causal-alpha
 
-**Your agent discovers what drives any asset. Then it researches 600 experiments overnight. You wake up to honest results.**
+**Causal alpha discovery for AI agents. Three layers: code enforces, skill guides, agent discovers.**
 
+```bash
+pip install git+https://github.com/cauchyturing/causal-edge.git
+causal-edge research init TSLA     # Abel discovery + workspace
+# edit strategy.py
+causal-edge research run           # validate, record, enforce
+causal-edge research status        # progress
 ```
-You:    "research alpha for APPL"
-Agent:  [gets Abel key: 1 click] → [discovers 12 causal parents]
-        → [fetches 5 years of prices] → [writes first strategy]
-        → [runs 50 experiments with anti-gaming validation]
-Agent:  "Found Sharpe 1.8 from causal parents. 3 KEEPs from 50 experiments.
-         Or: No signal found after 50 experiments. Honest."
-```
-
-**5 minutes to first signal. 1 hour to honest results. Zero quant knowledge required.**
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1a1a2e', 'primaryTextColor': '#eee', 'lineColor': '#0f3460', 'secondaryColor': '#16213e'}}}%%
 flowchart TD
-    D(["<b>DISCOVER</b><br/>Abel CAP → causal parents"])
-    B(["<b>BUILD</b><br/>strategy.py from scratch"])
-    V{"<b>VALIDATE</b><br/>metric triangle"}
-    L(["<b>LEARN</b><br/>compound on baseline"])
+    D["DISCOVER — Abel CAP parents + blanket"]
+    B["BUILD — agent writes strategy.py"]
+    V{"VALIDATE — causal-edge 15-test"}
+    L["LEARN — compound on baseline"]
 
-    D -->|"K honest · Pearl"| B
+    D -->|"K honest"| B
     B -->|"no look-ahead"| V
-    V -->|"KEEP"| L
-    V -.->|"DISCARD"| B
+    V -->|"PASS = KEEP"| L
+    V -.->|"FAIL = DISCARD"| B
     L -->|"next cycle"| D
 ```
 
-The agent is the quant. You are the client. causal-alpha is the methodology that makes it honest.
-
-## What This Is
-
-A **skill** (not a library) that teaches AI agents to:
-
-1. **Discover** what causally drives any asset — via [Abel CAP](https://cap.abel.ai/docs/getting-started/), the causal graph over 11,000+ financial nodes
-2. **Research** autonomously — 600 experiments overnight, each validated against an anti-gaming metric triangle
-3. **Report honestly** — "found alpha" or "no signal" — never fake results
-
-Built on two axioms from mathematics (not opinions):
-
-> **Axiom 1:** Causal search space (K≈10) is honest. Blind scan (K≈10,000) is not. Same Sharpe 1.8 → 97% real (causal) vs 41% real (blind). *— Pearl + Deflated Sharpe Ratio*
+## Three-Layer Design
 
 ```
-Pearl's definition:  causation = invariant under intervention
-Market reality:      regime change = intervention
-Consequence:         only causal signals survive live trading
-Bonus:               causal K is small → DSR is honest → discoveries are real
+L1: Code enforce (LLM-agnostic)     → causal-edge research CLI
+    K auto-computed from strategy.py AST
+    validate_strategy() runs every experiment
+    KEEP requires PASS (code refuses otherwise)
+    Look-ahead static check before execution
+
+L2: Judgment guidance (skill text)   → SKILL.md (280 words)
+    Explore vs exploit distinction
+    Micro-cap parents = the signal
+    Validation failures = research direction
+    When to declare honest failure
+
+L3: Agent autonomy (留白)            → strategy.py
+    What architecture, what features, what ML
+    Every asset is different
 ```
 
-> **Axiom 2:** Future data in features = invalid backtest. Zero tolerance. *— Definitional*
+**L1 protects all models. L2 improves strong models. L3 is where alpha lives.**
 
-And three constraints from 200+ experiments across 6 assets (strong, but questionable with evidence):
+## Why Causal
 
-> **C1:** Three orthogonal metrics > one metric *(currently Lo × IC × Omega via [causal-edge](https://github.com/cauchyturing/causal-edge))*
-> **C2:** Serial compounding > pre-defined grid *(each improvement builds on the last)*
-> **C3:** Explore = new information, not parameter tweaks *(100 fake explores → 0 keeps)*
+Correlation breaks when regimes change. Causation doesn't (Pearl, 1995).
 
-Axioms are permanent. Constraints are our current best. The agent knows the difference.
-
-## The 100× Equalizer
-
-| What | Without | With causal-alpha |
-|------|---------|-------------------|
-| Discovery | Scan 10,000 pairs (K=10,000, noise) | Abel CAP → 12 causal parents (K=10) |
-| Strategy | Overfit a backtest (look-ahead) | Agent writes from scratch, zero look-ahead |
-| Validation | "Sharpe is 3!" (gamed) | Metric triangle catches every trick |
-| Research | Manual, 1/day | 600/night, autonomous, compounds |
-| Failure mode | Trade noise, lose money | "No signal found" → capital preserved |
-
-**Institutional-grade methodology. One command to run it.**
-
-## How It Works
-
-```
-causal-alpha (this skill — methodology)          causal-edge (framework — validation)
-────────────────────────────────────────          ──────────────────────────────────
-discover:  Abel CAP → causal parents              validate_strategy(csv) → PASS/FAIL
-research:  experiment loop × metric triangle       15-test report card
-report:    results.tsv + memory.md                 dashboard generation
-
-        strategy.py — the ONE shared interface
-        run_strategy(data) → (pnl, dates, positions)
-```
-
-**Point your agent at [`SKILL.md`](SKILL.md).** It gains full discovery + research capability in one read. References for depth. [causal-edge](https://github.com/cauchyturing/causal-edge) for validation.
-
-## Quick Start
-
-### For agents (the intended use)
-
-```
-Agent reads SKILL.md → full capability acquired
-User says "research SOL" → agent handles everything:
-  Abel key (1 click) → parents → prices → harness → experiments → results
-```
-
-### For direct use
-
-```bash
-# 1. Install validation framework
-pip install git+https://github.com/cauchyturing/causal-edge.git
-
-# 2. Get Abel API key
-#    Visit https://abel.ai/skill or let the agent handle OAuth
-
-# 3. Point your agent at this skill
-#    Claude Code: copy to ~/.claude/agents/skills/causal-alpha/
-#    Other agents: read SKILL.md into context
-```
+- **K is small** — Abel gives ~10 justified parents vs ~10,000 blind scan → DSR honest
+- **Signals persist** — causal links survive bull→bear transitions
+- **Discovery is automated** — Abel CAP over 11K nodes, agent handles the rest
 
 ## Production Proof
 
-Built from this methodology. Real paper trading, real data, real validation:
+| Asset | Sharpe | Validation | Method |
+|-------|--------|------------|--------|
+| ETH | 4.27 | 15/15 PASS | 1 Abel parent, dual-lag xcorr |
+| TON | 2.10 | 13/13 PASS | 23 parents (10 Abel + 10 blanket + 3 crypto), vote² |
+| BNB | 2.82 | 15/15 PASS | 18 parents, 158 serial experiments |
+| META | 2.57 | 15/15 PASS | 25 Abel parents, multi-horizon GBDT |
+| AAPL | 1.69 | 15/15 PASS | Abel multihop + sector peers |
+| SOL | 2.06 | 13/13 PASS | No Abel coverage, crypto peer fallback |
 
-| Asset | Sharpe | Backtest | Research | Method |
-|-------|--------|----------|----------|--------|
-| ETH | 4.27 | 1,403 days | — | 1 Abel parent (SSTK), dual-lag xcorr |
-| BNB | 2.82 | 1,537 days | 158 experiments | 18 parents (multihop + 8 crypto peers) |
-| META | 2.57 | 1,060 days | 55 experiments | 25 Abel parents, multi-horizon GBDT |
-| AAPL | 1.69 | 1,223 days | 40 experiments | Abel multihop + sector peers |
-| TON | 1.77 | 2,043 days | — | 8-component vote ensemble |
+All validated by [causal-edge](https://github.com/cauchyturing/causal-edge). Run it yourself.
 
-**"Sharpe 4.27 — isn't that too good?"** Every number passed DSR (deflated for K), CPCV (PBO < 10%), rolling Sharpe stability, source substitution, and 11 other tests. The [validation framework is open source](https://github.com/cauchyturing/causal-edge) — run it yourself. If you can break these numbers, open an issue.
-
-## Skill Architecture
-
-```
-causal-alpha/
-  SKILL.md                     ← Start here. Full capability in one read.
-  references/
-    methodology.md             ← Why causal works (Pearl, axioms, production proofs)
-    discovery-protocol.md      ← Multihop protocol (core IP) + K accounting
-    experiment-loop.md         ← Cold-start → 7-step lifecycle → compounding
-    constraints.md             ← Look-ahead zero-tolerance (8 rules)
-    proven-patterns.md         ← Battle evidence, NOT templates
-```
-
-**5 reference files. No scripts. No templates. No framework.**
-
-The skill is pure methodology. The agent is the runtime. [causal-edge](https://github.com/cauchyturing/causal-edge) handles validation. [Abel CAP](https://cap.abel.ai/docs/getting-started/) handles discovery. This skill teaches the agent how to use both — honestly.
-
-## Why "Method, Not Template"
-
-Every asset's optimal strategy is different. AAPL ≠ META ≠ BNB (hard-won rule from 200+ experiments). Templates assume the future fits known patterns. The method assumes nothing except the two axioms.
-
-`proven-patterns.md` documents what worked — dual-lag xcorr, binary thresholds, persistence penalty, vote² sizing, cross-asset spreads — as **reference**, not scaffold. The agent reads for mechanism inspiration during explore mode. It does NOT copy-paste.
-
-**Constraints enable emergence. Templates prevent it.**
-
-## The Abel Ecosystem
+## Files
 
 ```
-Abel CAP          →  Causal graph engine (11K nodes, 42M edges)
-causal-alpha      →  Discovery + research methodology  ← you are here
-causal-edge       →  Validation framework (15-test, metric triangle)
-causal-abel       →  General causal graph queries
+SKILL.md                  ← Agent reads this. 280 words. 4 judgment calls.
+references/
+  experiment-loop.md      ← KEEP rule, explore/exploit, when to stop
+  discovery-protocol.md   ← Multihop, blanket, fallback
+  constraints.md          ← Look-ahead rules (8 constraints)
+  proven-patterns.md      ← Battle evidence for inspiration
+  methodology.md          ← Axioms vs constraints
 ```
 
-- **causal-edge** answers: *"Is this strategy real?"*
-- **causal-alpha** answers: *"How do I find real ones?"*
-- Together: discover → build → validate → learn → discover. The loop compounds.
+## The Ecosystem
 
-## Contributing
-
-The methodology evolves. If you find:
-- A 4th orthogonal metric dimension → C1 (triangle) is questioned
-- A non-convex Pareto frontier where compounding fails → C2 is questioned
-- A case where removing information IS the right explore → C3 is questioned
-
-Open an issue with evidence. Axioms are permanent. Constraints are our current best.
+```
+Abel CAP       → causal graph (discovery)
+causal-alpha   → research methodology (this skill)
+causal-edge    → validation + enforcement (L1 code)
+causal-abel    → Abel API access (cap_probe.py)
+```
 
 ## License
 
 MIT. Built by [Stephen](https://github.com/cauchyturing) / [Abel AI](https://github.com/Abel-ai-causality/).
-
----
-
-*Named after alpha — the excess return. The causal kind. The only kind that survives.*
