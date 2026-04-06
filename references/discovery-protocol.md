@@ -49,25 +49,50 @@ Capabilities needed (find current verb names from `cap.json`):
 
 Operations, not API calls. The agent reads `cap.json` for actual verb names.
 
-**Core protocol (always do):**
-1. **Get parents** of target asset. Record each parent + tau.
-2. **Get children** of each parent. These are hop-2 candidates.
-3. **Multihop expansion** — for each child != target, get its parents.
-   Add novel ones as hop-2. Repeat once more (hop-3) only if coverage thin.
-4. **Record K** — every unique (parent, lag) combination counts toward K.
+**K tracking starts NOW.** Initialize `K = 0`. Every unique ticker added
+to the candidate pool increments K. This K is carried into the experiment
+loop and feeds DSR (Test 6 in causal-edge validation). A wide discovery
+makes all future experiments harder to validate.
 
-**Enrichment (if data permits):**
+**Core protocol (always do):**
+1. **Get parents** of target asset. Record each parent + tau. `K += len(parents)`.
+2. **Get Markov blanket** of target. Blanket includes co-parents and spouses
+   that `neighbors(parents)` misses. TON proof: 4 of top 7 from blanket.
+   `K += len(new_nodes_not_in_parents)`.
+3. **Get children** of target. Used for hop-2 expansion.
+4. **Multihop expansion** — for each child != target, get its parents.
+   Add novel ones as hop-2. Repeat once more (hop-3) only if coverage thin.
+   `K += len(new_hop2_nodes)`.
+5. **Record K** — total unique tickers in candidate pool. This is the
+   discovery K. Scanning adds K_scan = n_tickers x n_lags_per_ticker.
+   Use ONLY Abel-suggested lags (tau +- 2 variants), not wide sweeps.
+
+**Enrichment (if data permits, each increments K):**
 - **Verify paths** — confirm causal transmission strength for top candidates.
-- **Sector peers** — for each direct parent, add 2-3 same-sector liquid peers.
-- **Crypto peers** — for crypto targets, add correlated crypto assets.
-  (BNB: +8 crypto peers was the #1 explore discovery, IC +34%.)
+- **Sector peers** — for each direct parent, add 2-3 same-sector liquid peers. `K += n_peers`.
+- **Crypto peers** — for crypto targets, check causal paths from major crypto. 
+  BNB: +8 crypto peers was the #1 explore discovery, IC +34%.
+  TON: crypto peers all FAILED OOS — asset-dependent, not universal. `K += n_crypto`.
 - **Connectivity screen** — validate full multi-node causal structure.
 
 **Selection (always last):**
 Merge candidates. Rank by `data_availability x causal_proximity`:
 - `data_availability`: 1.0 daily, 0.5 weekly, 0 unavailable
 - `causal_proximity`: 1/hop_depth (direct=1.0, hop-2=0.5, hop-3=0.33)
+- `blanket_bonus`: +0.3 for Markov blanket nodes (co-parents capture structural effects)
 Select top-N. Typically 15-25 for equities, 15-20 for crypto.
+
+**Output K summary:**
+```
+Discovery K: 23 tickers (10 parents + 5 blanket + 8 multihop)
+Scan K budget: 23 x 5 lags = 115 (Abel-justified lags only)
+DSR threshold at K=115: Sharpe > ~1.5 for 90% confidence
+```
+
+This K summary feeds into the experiment loop. Wide lag sweeps
+(11 lags x 5 windows = 55 per ticker) inflate K to ~1000+ and make
+DSR nearly impossible to pass at moderate Sharpe. Constrain scans to
+Abel-suggested tau +- 2 variants (5 lags per ticker, not 45+).
 
 ## 4. Caching and Fallback
 
