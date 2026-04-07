@@ -56,15 +56,18 @@ Correlation breaks when regimes change. Causation doesn't (Pearl, 1995).
 
 ## Production Proof
 
-Tested across 6 assets (crypto + equity), 200+ serial experiments:
+| | Sharpe | Validation | Backtest |
+|---|--------|------------|----------|
+| Crypto A | 4.27 | 15/15 PASS | 1,400+ days |
+| Crypto B | 2.82 | 15/15 PASS | 1,500+ days |
+| Crypto C | 2.10 | 13/13 PASS | 1,100+ days |
+| Equity A | 2.57 | 15/15 PASS | 1,000+ days |
+| Equity B | 1.69 | 15/15 PASS | 1,200+ days |
+| Crypto D | 2.06 | 13/13 PASS | 1,300+ days |
 
-- All strategies pass [causal-edge](https://github.com/cauchyturing/causal-edge) full validation (15-test suite)
-- Sharpe range: 1.7 — 4.3 (after DSR deflation at honest K)
-- Architectures discovered by agents: vote ensembles, walk-forward ML, xcorr overlays
-- Zero loss years across 4+ year backtests on best strategies
-- Fallback works without Abel coverage (sector heuristic peers)
+All DSR-deflated (honest K from Abel, not blind scan). All pass [causal-edge](https://github.com/cauchyturing/causal-edge) full validation. 200+ serial experiments across 6 assets. Zero loss years on best strategies.
 
-Build your own and validate: `causal-edge validate --csv your_backtest.csv`
+Build your own: `causal-edge research init <TICKER>`
 
 ## Files
 
